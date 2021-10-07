@@ -1,55 +1,92 @@
 {
-    "AlgorithmSpecification": {
-        "TrainingImage": "366743142698.dkr.ecr.ap-northeast-2.amazonaws.com/sagemaker-xgboost:1.3-1",
-        "TrainingInputMode": "File"
+  "apiVersion": "sagemaker.aws.amazon.com/v1",
+  "kind": "TrainingJob",
+  "metadata": {
+    "name": "xgboost-mnist"
+  },
+  "spec": {
+    "hyperParameters": [
+      {
+        "name": "max_depth",
+        "value": "4"
+      },
+      {
+        "name": "eta",
+        "value": "0.2"
+      },
+      {
+        "name": "gamma",
+        "value": "4"
+      },
+      {
+        "name": "min_child_weight",
+        "value": "6"
+      },
+      {
+        "name": "subsample",
+        "value": "0.7"
+      },
+      {
+        "name": "objective",
+        "value": "reg:linear"
+      },
+      {
+        "name": "num_round",
+        "value": "50"
+      },
+      {
+        "name": "verbosity",
+        "value": "2"
+      }
+    ],
+    "algorithmSpecification": {
+      "trainingImage": "366743142698.dkr.ecr.ap-northeast-2.amazonaws.com/sagemaker-xgboost:1.3-1",
+      "trainingInputMode": "File"
     },
-    "RoleArn": "arn:aws:iam::846732235403:role/service-role/AmazonSageMaker-ExecutionRole-20210831T233752",
-    "OutputDataConfig": {
-        "S3OutputPath": "s3://brjeong-mlops-bucket/xgboost/"
+    "roleArn": {roleArn},
+    "region": "ap-northeast-2",
+    "outputDataConfig": {
+      "s3OutputPath": "{outputPath}"
     },
-    "ResourceConfig": {
-        "InstanceCount": 1,
-        "InstanceType": "ml.m5.2xlarge",
-        "VolumeSizeInGB": 5
+    "resourceConfig": {
+      "instanceCount": 1,
+      "instanceType": "ml.m5.2xlarge",
+      "volumeSizeInGB": 5
     },
-    "TrainingJobName": "xgboost-mnist",
-    "HyperParameters": {
-        "max_depth": "5",
-        "eta": "0.2",
-        "gamma": "4",
-        "min_child_weight": "6",
-        "subsample": "0.7",
-        "objective": "reg:linear",
-        "num_round": "50",
-        "verbosity": "2"
+    "stoppingCondition": {
+      "maxRuntimeInSeconds": 3600
     },
-    "StoppingCondition": {
-        "MaxRuntimeInSeconds": 3600
-    },
-    "InputDataConfig": [
-        {
-            "ChannelName": "train",
-            "DataSource": {
-                "S3DataSource": {
-                    "S3DataType": "S3Prefix",
-                    "S3Uri": "s3://brjeong-mlops-bucket/xgboost/train/",
-                    "S3DataDistributionType": "FullyReplicated"
-                }
-            },
-            "ContentType": "libsvm",
-            "CompressionType": "None"
+    "inputDataConfig": [
+      {
+        "channelName": "train",
+        "dataSource": {
+          "s3DataSource": {
+            "s3DataType": "S3Prefix",
+            "s3Uri": "{trainSourceUri}",
+            "s3DataDistributionType": "FullyReplicated"
+          }
         },
-        {
-            "ChannelName": "validation",
-            "DataSource": {
-                "S3DataSource": {
-                    "S3DataType": "S3Prefix",
-                    "S3Uri": "s3://brjeong-mlops-bucket/xgboost/validation/",
-                    "S3DataDistributionType": "FullyReplicated"
-                }
-            },
-            "ContentType": "libsvm",
-            "CompressionType": "None"
-        }
+        "contentType": "libsvm",
+        "compressionType": "None"
+      },
+      {
+        "channelName": "validation",
+        "dataSource": {
+          "s3DataSource": {
+            "s3DataType": "S3Prefix",
+            "s3Uri": "{validationUri}",
+            "s3DataDistributionType": "FullyReplicated"
+          }
+        },
+        "contentType": "libsvm",
+        "compressionType": "None"
+      }
+    ],
+    "tags": [
+      {
+        "key": "tagKey",
+        "value": "tagValue"
+      }
     ]
+  }
 }
